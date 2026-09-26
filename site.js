@@ -51,7 +51,18 @@
       const title = document.createElement('h3'); title.textContent = lesson.title;
       const description = document.createElement('p'); description.textContent = lesson.description;
       const action = document.createElement('span'); action.className = 'card-action'; action.textContent = 'Let’s practice ↗';
-      card.append(tag, title, description, action); cards.append(card);
+      const top = document.createElement('div'); top.className = 'card-top';
+      const art = document.createElement('span');
+      art.className = `ten-card-art ${lesson.skill === 'count-groups' ? 'two-groups' : 'make-ten'}`;
+      art.setAttribute('aria-hidden', 'true');
+      for (let i = 0; i < 10; i++) {
+        const dot = document.createElement('i'); art.append(dot);
+      }
+      if (lesson.skill === 'missing-addend') {
+        const badge = document.createElement('b'); badge.textContent = '?'; art.append(badge);
+      }
+      top.append(art, tag);
+      card.append(top, title, description, action); cards.append(card);
       const link = document.createElement('a'); link.href = lessonHref(lesson); link.textContent = `Lesson ${lesson.id}`;
       link.addEventListener('click', () => document.getElementById('site-menu').close());
       navigation.append(link);
