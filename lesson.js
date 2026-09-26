@@ -18,7 +18,7 @@
       hint: 'Tap each shape to count its group.'
     },
     'missing-addend': {
-      answers: q => q.blankLeft ? [10 - q.given, q.given] : [q.given, 10 - q.given],
+      answers: q => [q.given, 10 - q.given],
       tappable: (q, i) => i >= q.given,
       instruction: 'How many more? Tap a box. Choose a number.',
       hint: 'Tap each empty space to count how many more.'
@@ -37,8 +37,7 @@
   function start() {
     // One endpoint pair per set; remaining questions practice nonzero groups.
     const given = shuffle([Math.random() < .5 ? 0 : 10, ...shuffle([1,2,3,4,5,6,7,8,9]).slice(0, 4)]);
-    const leftPositions = new Set(shuffle([0,1,2,3,4]).slice(0, 2));
-    questions = given.map((n, i) => ({ given: n, blankLeft: leftPositions.has(i) }));
+    questions = given.map(n => ({ given: n }));
     index = 0;
     $('practice').hidden = false;
     $('finish').hidden = true;
@@ -47,7 +46,7 @@
   function render() {
     const q = questions[index];
     values = [null, null];
-    selected = lesson.skill === 'count-groups' || q.blankLeft ? 0 : 1;
+    selected = lesson.skill === 'count-groups' ? 0 : 1;
     mistakes = 0; hint = false; locked = false; counted = new Set();
     $('help').hidden = true;
     $('hint-counts').hidden = true;
@@ -82,7 +81,7 @@
     $('equation').replaceChildren();
     for (let part = 0; part < 2; part++) {
       if (part) { const plus = document.createElement('span'); plus.textContent = '+'; $('equation').append(plus); }
-      const blank = lesson.skill === 'count-groups' || (q.blankLeft ? part === 0 : part === 1);
+      const blank = lesson.skill === 'count-groups' || part === 1;
       const el = document.createElement(blank ? 'button' : 'span');
       if (blank) {
         el.className = 'blank'; el.dataset.part = part;
