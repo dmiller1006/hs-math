@@ -2,81 +2,54 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 <title>HS Math</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, 'Helvetica Neue', sans-serif;
-    background: #f5f0e0;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px 20px;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-  h1 {
-    color: #2e7d32;
-    font-size: 36px;
-    margin-bottom: 30px;
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
-    width: 100%;
-    max-width: 600px;
-  }
-  a.card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 28px 24px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-    text-decoration: none;
-    color: #333;
-    transition: transform 0.1s, box-shadow 0.1s;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-  a.card:active {
-    transform: scale(0.97);
-    box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-  }
-  .card-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
-  }
-  .card-title {
-    font-size: 22px;
-    font-weight: 700;
-    color: #2e7d32;
-    margin-bottom: 6px;
-  }
-  .card-desc {
-    font-size: 16px;
-    color: #777;
-  }
-</style>
+<script src="theme.js"></script>
+<link rel="stylesheet" href="site.css">
+<script src="lessons.js" defer></script>
+<script src="site.js" defer></script>
 </head>
-<body>
-<h1>HS Math</h1>
-<div class="grid">
-  <a class="card" href="counting-circles.html">
-    <div class="card-icon">&#x1F7E2;</div>
-    <div class="card-title">Counting Circles</div>
-    <div class="card-desc">Color circles to match a number (10–30)</div>
-  </a>
-  <a class="card" href="simple-math.html">
-    <div class="card-icon">&#x2795;</div>
-    <div class="card-title">Simple Math</div>
-    <div class="card-desc">Addition and subtraction with single digits</div>
-  </a>
-</div>
+<body data-page="home">
+<main class="home-main">
+  <nav class="year-tabs" aria-label="School year">
+    <a href="#2025" data-year="2025" aria-current="page">2025</a>
+    <a href="#2026" data-year="2026">2026</a>
+  </nav>
+  <section data-year-panel="2025" aria-labelledby="title-2025">
+    <div class="hero">
+      <p class="eyebrow">2025 · THE PRACTICE CORNER</p>
+      <h1 id="title-2025">Little steps.<br><span>Big discoveries.</span></h1>
+      <p class="hero-copy">A few numbers, a little curiosity, and a whole lot of “I did it!” Pick an activity and let’s go.</p>
+    </div>
+    <div class="section-heading"><h2>Choose your adventure</h2><span>2 activities</span></div>
+    <div class="card-grid">
+      <a class="lesson-card" href="counting-circles.html">
+        <div class="card-top"><span class="card-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="card-tag">COUNT & TAP</span></div>
+        <h3>Counting Circles</h3>
+        <p>Tap, count, and color your way from 10 to 30.</p>
+        <span class="card-action">Let’s count <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="lesson-card" href="simple-math.html">
+        <div class="card-top"><span class="math-art" aria-hidden="true">+ −</span><span class="card-tag">ADD & SUBTRACT</span></div>
+        <h3>Simple Math</h3>
+        <p>Put numbers together. Take a few away. See what happens!</p>
+        <span class="card-action">Let’s solve <span aria-hidden="true">↗</span></span>
+      </a>
+    </div>
+  </section>
+  <section data-year-panel="2026" aria-labelledby="title-2026" hidden>
+    <div class="hero">
+      <p class="eyebrow">2026 · A NEW ADVENTURE</p>
+      <h1 id="title-2026">So much more<br><span>to explore.</span></h1>
+      <p class="hero-copy">A new year of little discoveries, one lesson at a time.</p>
+    </div>
+    <div class="section-heading"><h2>Your lessons</h2><span id="lesson-count"></span></div>
+    <div class="card-grid" id="lesson-cards"></div>
+  </section>
+  <footer class="road-footer"><span aria-hidden="true">🚗</span> Go at your own pace.</footer>
+</main>
 </body>
 </html>

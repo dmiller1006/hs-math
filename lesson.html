@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<title>Lesson · HS Math</title>
+<script src="theme.js"></script>
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="lesson.css">
+<script src="lessons.js" defer></script>
+<script src="site.js" defer></script>
+<script src="lesson.js" defer></script>
+</head>
+<body data-page="lesson">
+<main class="lesson-main">
+<a class="exercise-back" href="index.html#2026">← 2026 lessons</a>
+<p class="eyebrow" id="lesson-number"></p>
+<h1 id="lesson-title">Math practice</h1>
+<section id="practice">
+<div class="progress" id="progress" aria-label="Lesson progress"></div>
+<p id="instruction">Count. Tap a box. Choose a number.</p>
+<div class="ten-frame" id="frame" role="group" aria-label="Ten-frame"></div>
+<div id="hint-counts" class="hint-counts" aria-live="polite" hidden></div>
+<div class="equation" id="equation" role="group" aria-label="Complete the equation"></div>
+<div class="number-pad" id="number-pad" aria-label="Choose a number"></div>
+<div class="lesson-controls">
+<button class="lesson-button primary" id="check">Check ✓</button>
+<button class="lesson-button" id="clear">Clear</button>
+<button class="lesson-button" id="help" hidden>Help ✦</button>
+</div>
+<p id="feedback" class="lesson-feedback" role="status" aria-live="polite"></p>
+</section>
+<section id="finish" class="finish" hidden>
+<div aria-hidden="true" class="finish-art">🌟 🚗 🌟</div>
+<h2 tabindex="-1" id="finish-title">All done!</h2>
+<p>You practiced five questions.</p>
+<button id="again" class="lesson-button primary">Try again</button>
+<a class="lesson-button" href="index.html#2026">2026 lessons</a>
+</section>
+</main>
+</body>
+</html>
