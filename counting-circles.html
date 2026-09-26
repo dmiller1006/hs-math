@@ -253,9 +253,14 @@
     z-index: 999;
   }
 </style>
-<script src="theme.js"></script>
-<link rel="stylesheet" href="site.css">
-<script src="site.js" defer></script>
+<script>
+// A drawer reload gives every page asset the same fresh cache key.
+(() => {
+  const token = new URLSearchParams(location.search).get('_refresh');
+  const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>");
+})();
+</script>
 </head>
 <body data-page="exercise">
 

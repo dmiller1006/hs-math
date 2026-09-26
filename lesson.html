@@ -6,12 +6,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
 <title>Lesson · HS Math</title>
-<script src="theme.js"></script>
-<link rel="stylesheet" href="site.css">
-<link rel="stylesheet" href="lesson.css">
-<script src="lessons.js" defer></script>
-<script src="site.js" defer></script>
-<script src="lesson.js" defer></script>
+<script>
+// A drawer reload gives every page asset the same fresh cache key.
+(() => {
+  const token = new URLSearchParams(location.search).get('_refresh');
+  const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<link rel=\"stylesheet\" " + "href=\"lesson.css" + suffix + "\">\n<script " + "src=\"lessons.js" + suffix + "\" defer><\/script>\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>\n<script " + "src=\"lesson.js" + suffix + "\" defer><\/script>");
+})();
+</script>
 </head>
 <body data-page="lesson">
 <main class="lesson-main">

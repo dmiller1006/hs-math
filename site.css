@@ -116,3 +116,5 @@ body[data-page="exercise"] h1 { color: var(--ink); }
 .ten-card-art.make-ten { transform: rotate(7deg); }
 .ten-card-art.make-ten i:nth-child(n+7) { background: transparent; border: 2px dashed var(--muted); }
 .ten-card-art b { position: absolute; right: -9px; bottom: -11px; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: var(--on-accent); background: var(--mint); font-size: 21px; box-shadow: 0 3px 0 var(--shadow); }
+
+.reload-button { width: 100%; margin-top: 28px; }

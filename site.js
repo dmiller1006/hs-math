@@ -20,8 +20,16 @@
         <a class="year-link" data-year="2026" href="index.html#2026"><span>2026</span><span class="nav-caption">A new adventure</span></a>
         <div class="lesson-nav" id="lesson-nav"><span>Lessons coming soon</span></div>
       </nav>
+      <button class="shell-button reload-button" type="button">↻ Reload app</button>
       <div class="menu-note"><span aria-hidden="true">🚙</span><p>A little practice.<br>A new discovery.</p></div>`;
     document.body.append(menu);
+    menu.querySelector('.reload-button').addEventListener('click', () => {
+      // Safari has no JavaScript equivalent of the browser's hard-reload command.
+      // A fresh URL bypasses cached HTML; the head also versions every CSS/JS URL.
+      const url = new URL(location.href);
+      url.searchParams.set('_refresh', Date.now().toString());
+      location.replace(url.href);
+    });
     const openButton = header.querySelector('.menu-button');
     openButton.addEventListener('click', () => {
       menu.showModal();
@@ -94,4 +102,13 @@
   }
   window.addEventListener('hashchange', selectYear);
   selectYear();
+  const refreshToken = new URLSearchParams(location.search).get('_refresh');
+  if (refreshToken && /^\d+$/.test(refreshToken)) {
+    document.querySelectorAll('a[href]').forEach(link => {
+      const url = new URL(link.getAttribute('href'), location.href);
+      if (url.origin !== location.origin) return;
+      url.searchParams.set('_refresh', refreshToken);
+      link.href = url.href;
+    });
+  }
 })();

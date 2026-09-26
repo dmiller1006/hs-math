@@ -1,7 +1,7 @@
 {
   "name": "HS Math",
   "short_name": "HS Math",
-  "start_url": "/hs-math/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#f5f0e0",
   "theme_color": "#2e7d32"

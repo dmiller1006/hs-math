@@ -7,10 +7,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 <title>HS Math</title>
-<script src="theme.js"></script>
-<link rel="stylesheet" href="site.css">
-<script src="lessons.js" defer></script>
-<script src="site.js" defer></script>
+<script>
+// A drawer reload gives every page asset the same fresh cache key.
+(() => {
+  const token = new URLSearchParams(location.search).get('_refresh');
+  const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<script " + "src=\"lessons.js" + suffix + "\" defer><\/script>\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>");
+})();
+</script>
 </head>
 <body data-page="home">
 <main class="home-main">
