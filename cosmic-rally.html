@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<title>Cosmic Rally · HS Math</title>
+<script>
+// A drawer reload gives every page asset the same fresh cache key.
+(() => {
+  const token = new URLSearchParams(location.search).get('_refresh');
+  const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<link rel=\"stylesheet\" " + "href=\"cosmic-rally.css" + suffix + "\">\n<script " + "src=\"fun-gate.js" + suffix + "\" defer><\/script>\n<script " + "src=\"cosmic-rally-logic.js" + suffix + "\" defer><\/script>\n<script " + "src=\"cosmic-rally.js" + suffix + "\" defer><\/script>");
+})();
+</script>
+</head>
+<body data-page="game" class="rally-body">
+<div class="rally-app" id="app" data-state="choose">
+  <header class="rally-bar">
+    <a class="rally-back" href="index.html#fun">← Menu</a>
+    <span class="rally-title" aria-hidden="true">Cosmic Rally</span>
+    <div class="rally-progress" id="progress" role="img" aria-label="Station 1 of 5"></div>
+    <div class="rally-tools">
+      <button class="tool-button" id="music" type="button" aria-pressed="true" aria-label="Music on"><span aria-hidden="true">🎵</span></button>
+      <button class="tool-button" id="sound" type="button" aria-pressed="true" aria-label="Sound on"><span aria-hidden="true">🔊</span></button>
+      <button class="tool-button" id="calm" type="button" aria-pressed="false" aria-label="Calm motion off"><span aria-hidden="true">🐢</span></button>
+      <button class="tool-button" id="pause" type="button" aria-label="Pause"><span aria-hidden="true">⏸</span></button>
+    </div>
+  </header>
+
+  <div class="scene" id="scene">
+    <svg id="stage" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMax meet" role="img" aria-labelledby="stage-label">
+      <title id="stage-label">A space car on a moon road</title>
+      <defs>
+        <radialGradient id="moon-shade" cx="38%" cy="35%" r="70%">
+          <stop offset="0" stop-color="#fffbe8"/><stop offset=".7" stop-color="#f2e7c4"/><stop offset="1" stop-color="#d9c99b"/>
+        </radialGradient>
+        <radialGradient id="glow" r="50%">
+          <stop offset="0" stop-color="#fff6c2" stop-opacity=".55"/><stop offset="1" stop-color="#fff6c2" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="earth-sea" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#5fb2ff"/><stop offset="1" stop-color="#2c5fd0"/>
+        </linearGradient>
+        <linearGradient id="ground-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop class="ground-top" offset="0"/><stop class="ground-bottom" offset="1"/>
+        </linearGradient>
+        <linearGradient id="flame" x1="1" y1="0" x2="0" y2="0">
+          <stop offset="0" stop-color="#fff7b0"/><stop offset=".4" stop-color="#ffb347"/><stop offset="1" stop-color="#ff5e7a" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <g id="layer-stars"></g>
+      <g id="layer-far">
+        <g class="earth" transform="translate(110 95)">
+          <circle r="42" fill="url(#earth-sea)"/>
+          <path d="M-22 -26c10 4 14 14 6 22s-2 18 8 20c-14 6-30-4-34-18s6-28 20-24zM14 -34c10 2 22 14 22 28-8-4-14 0-20-6s-10-12-2-22z" fill="#6fd08c"/>
+          <circle r="42" fill="none" stroke="#bfe3ff" stroke-width="3" opacity=".6"/>
+        </g>
+      </g>
+      <g id="moon" transform="translate(520 780)">
+        <circle r="240" fill="url(#glow)"/>
+        <circle r="150" fill="url(#moon-shade)"/>
+        <circle cx="-50" cy="-40" r="26" fill="#e3d4a6"/>
+        <circle cx="44" cy="30" r="34" fill="#e3d4a6"/>
+        <circle cx="-30" cy="62" r="16" fill="#e3d4a6"/>
+        <circle cx="70" cy="-60" r="12" fill="#e3d4a6"/>
+      </g>
+      <g id="layer-mid"></g>
+      <g id="layer-hills"></g>
+      <g id="layer-world"></g>
+      <g id="fx-back"></g>
+      <g id="car" class="car" style="--car:#ef4444">
+        <g id="car-body">
+          <g id="car-flame" opacity="0">
+            <path d="M-86 -44 C-130 -58 -170 -38 -200 -34 C-170 -30 -130 -12 -86 -24Z" fill="url(#flame)"/>
+            <path d="M-86 -40 C-112 -46 -130 -36 -146 -34 C-130 -32 -112 -24 -86 -28Z" fill="#fffbe0"/>
+          </g>
+          <line x1="-16" y1="-84" x2="-26" y2="-112" stroke="#d7dcff" stroke-width="4" stroke-linecap="round"/>
+          <path class="antenna-star" d="M-26 -124l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z"/>
+          <ellipse cx="-4" cy="-58" rx="44" ry="32" fill="#bfefff" opacity=".85"/>
+          <g class="driver">
+            <circle cx="-2" cy="-62" r="16" fill="#8ee06b"/>
+            <circle cx="-8" cy="-65" r="4.5" fill="#fff"/><circle cx="5" cy="-65" r="4.5" fill="#fff"/>
+            <circle cx="-7" cy="-64" r="2.2" fill="#1b1d33"/><circle cx="6" cy="-64" r="2.2" fill="#1b1d33"/>
+            <path d="M-8 -55q6 5 12 0" stroke="#1b1d33" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </g>
+          <ellipse cx="-18" cy="-72" rx="14" ry="7" fill="#fff" opacity=".7" transform="rotate(-20 -18 -72)"/>
+          <path class="car-paint" d="M-88 -30 C-90 -46 -76 -54 -58 -54 L52 -54 C74 -54 92 -44 94 -30 L94 -22 C94 -16 90 -14 84 -14 L-80 -14 C-86 -14 -88 -18 -88 -24Z"/>
+          <path d="M-70 -38 L70 -38" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+          <path class="car-trim" d="M-88 -26 L94 -26 L94 -20 C94 -16 90 -14 84 -14 L-80 -14 C-86 -14 -88 -18 -88 -20Z"/>
+          <circle cx="88" cy="-40" r="6" fill="#fff6a8"/>
+          <circle cx="-84" cy="-38" r="5" fill="#ff8aa0"/>
+          <g class="wheel" id="wheel-back" transform="translate(-52 -16)">
+            <circle r="22" fill="#23243a"/><circle r="12" fill="#c8cde8"/>
+            <g class="spokes"><rect x="-2.5" y="-20" width="5" height="40" rx="2" fill="#6a6f92"/><rect x="-20" y="-2.5" width="40" height="5" rx="2" fill="#6a6f92"/></g>
+            <circle r="5" fill="#23243a"/>
+          </g>
+          <g class="wheel" id="wheel-front" transform="translate(56 -16)">
+            <circle r="22" fill="#23243a"/><circle r="12" fill="#c8cde8"/>
+            <g class="spokes"><rect x="-2.5" y="-20" width="5" height="40" rx="2" fill="#6a6f92"/><rect x="-20" y="-2.5" width="40" height="5" rx="2" fill="#6a6f92"/></g>
+            <circle r="5" fill="#23243a"/>
+          </g>
+        </g>
+      </g>
+      <g id="fx-front"></g>
+    </svg>
+    <div class="bubble" id="bubble" role="status" aria-live="polite" hidden></div>
+    <div class="trophy" id="trophy" hidden>
+      <svg viewBox="-100 -120 200 230" aria-hidden="true">
+        <path d="M-58 -96 H58 C58 -20 30 14 0 20 C-30 14 -58 -20 -58 -96Z" fill="#ffd84d" stroke="#fff3b0" stroke-width="6"/>
+        <path d="M-58 -80 C-100 -80 -96 -24 -44 -18 M58 -80 C100 -80 96 -24 44 -18" fill="none" stroke="#ffd84d" stroke-width="12" stroke-linecap="round"/>
+        <rect x="-12" y="18" width="24" height="34" fill="#e6b422"/>
+        <rect x="-50" y="52" width="100" height="26" rx="8" fill="#b9831a"/>
+        <path d="M0 -76l9 19 21 3-15 14 4 21-19-10-19 10 4-21-15-14 21-3z" fill="#fff6c2"/>
+      </svg>
+    </div>
+    <div class="curtain" id="curtain" aria-hidden="true"></div>
+  </div>
+
+  <section class="deck" aria-label="Controls">
+    <div class="panel panel-choose" id="panel-choose">
+      <div class="car-choices" role="radiogroup" aria-label="Choose a car">
+        <button class="car-choice" type="button" role="radio" aria-checked="false" data-color="#ef4444" aria-label="Red car"></button>
+        <button class="car-choice" type="button" role="radio" aria-checked="false" data-color="#3b82f6" aria-label="Blue car"></button>
+        <button class="car-choice" type="button" role="radio" aria-checked="false" data-color="#22c55e" aria-label="Green car"></button>
+      </div>
+      <button class="big-button go-button" id="go" type="button" hidden>Go! <span aria-hidden="true">▶</span></button>
+    </div>
+
+    <div class="panel panel-drive" id="panel-drive" hidden>
+      <p class="drive-note" aria-live="polite">Vroom! <span aria-hidden="true">🚗💨</span></p>
+    </div>
+
+    <div class="panel panel-fork" id="panel-fork" hidden>
+      <button class="route-button route-crystal" type="button" data-route="crystal" aria-label="Crystal road"><span class="route-art" aria-hidden="true">💎</span><span>Crystal</span></button>
+      <button class="route-button route-candy" type="button" data-route="candy" aria-label="Candy road"><span class="route-art" aria-hidden="true">🍭</span><span>Candy</span></button>
+    </div>
+
+    <div class="panel panel-math" id="panel-math" hidden>
+      <div class="equation" id="equation" role="group" aria-label="Charges plus how many more makes ten"></div>
+      <div class="pad" id="pad" role="group" aria-label="Choose a number"></div>
+    </div>
+
+    <div class="panel panel-boost" id="panel-boost" hidden>
+      <button class="big-button boost-button" id="boost" type="button">Boost! <span aria-hidden="true">🚀</span></button>
+    </div>
+
+    <div class="panel panel-done" id="panel-done" hidden>
+      <div class="done-actions">
+        <button class="big-button replay-button" id="replay" type="button"><span aria-hidden="true">↻</span> Replay</button>
+        <a class="big-button menu-button-link" href="index.html#fun">Back to FUN</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="pause-screen" id="pause-screen" hidden>
+    <p class="pause-title">Paused</p>
+    <button class="big-button resume-button" id="resume" type="button"><span aria-hidden="true">▶</span> Play</button>
+    <a class="rally-back pause-menu" href="index.html#fun">← Menu</a>
+  </div>
+</div>
+</body>
+</html>

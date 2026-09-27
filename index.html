@@ -12,7 +12,7 @@
 (() => {
   const token = new URLSearchParams(location.search).get('_refresh');
   const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
-  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<script " + "src=\"lessons.js" + suffix + "\" defer><\/script>\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>");
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<script " + "src=\"lessons.js" + suffix + "\" defer><\/script>\n<script " + "src=\"fun-gate.js" + suffix + "\" defer><\/script>\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>");
 })();
 </script>
 </head>
@@ -21,6 +21,7 @@
   <nav class="year-tabs" aria-label="School year">
     <a href="#2025" data-year="2025" aria-current="page">2025</a>
     <a href="#2026" data-year="2026">2026</a>
+    <a href="#fun" data-year="fun">FUN</a>
   </nav>
   <section data-year-panel="2025" aria-labelledby="title-2025">
     <div class="hero">
@@ -52,6 +53,23 @@
     </div>
     <div class="section-heading"><h2>Your lessons</h2><span id="lesson-count"></span></div>
     <div class="card-grid" id="lesson-cards"></div>
+  </section>
+  <section data-year-panel="fun" aria-labelledby="title-fun" hidden>
+    <div class="hero">
+      <p class="eyebrow">FUN · PLAY TIME</p>
+      <h1 id="title-fun">Math that goes<br><span>zoom.</span></h1>
+      <p class="hero-copy">Drive a space car, power it up with numbers, and jump over the moon.</p>
+    </div>
+    <div class="section-heading"><h2>Games</h2><span>1 game</span></div>
+    <div class="card-grid">
+      <a class="lesson-card" href="cosmic-rally.html">
+        <div class="card-top"><span class="rally-card-art" aria-hidden="true">🚗🌙</span><span class="card-tag">MAKE TEN</span></div>
+        <h3>Cosmic Rally</h3>
+        <p>Charge the battery to ten, then tap Boost for a moon jump.</p>
+        <span class="card-action">Let’s drive <span aria-hidden="true">↗</span></span>
+      </a>
+    </div>
+    <button class="shell-button lock-fun" type="button">🔒 Lock FUN</button>
   </section>
   <footer class="road-footer"><span aria-hidden="true">🚗</span> Go at your own pace.</footer>
 </main>

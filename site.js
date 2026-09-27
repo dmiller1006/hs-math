@@ -19,7 +19,9 @@
         <a class="year-link" data-year="2025" href="index.html#2025"><span>2025</span><span class="nav-caption">Practice corner</span></a>
         <a class="year-link" data-year="2026" href="index.html#2026"><span>2026</span><span class="nav-caption">A new adventure</span></a>
         <div class="lesson-nav" id="lesson-nav"><span>Lessons coming soon</span></div>
+        <a class="year-link" data-year="fun" href="index.html#fun"><span>FUN</span><span class="nav-caption">Games · grown-up code</span></a>
       </nav>
+      <button class="shell-button menu-lock" type="button" hidden>🔒 Lock FUN</button>
       <button class="shell-button reload-button" type="button">↻ Reload app</button>
       <div class="menu-note"><span aria-hidden="true">🚙</span><p>A little practice.<br>A new discovery.</p></div>`;
     document.body.append(menu);
@@ -89,17 +91,48 @@
     updateThemeButton();
   });
   updateThemeButton();
+  const gate = window.FunGate;
   function selectYear() {
-    const year = home && location.hash === '#2026' ? '2026' : '2025';
+    const hash = location.hash.slice(1);
+    const year = home && (hash === '2026' || hash === 'fun') ? hash : '2025';
+    updateLockButtons();
+    // FUN content stays hidden until the grown-up code is entered.
+    if (home && year === 'fun' && gate && !gate.isUnlocked()) {
+      document.querySelectorAll('[data-year-panel]').forEach(panel => { panel.hidden = true; });
+      // The drawer is a modal dialog; close it so the keypad is not stuck behind it.
+      const menu = document.getElementById('site-menu');
+      if (menu && menu.open) menu.close();
+      gate.prompt({
+        onUnlock: () => { gateWatch.refresh(); selectYear(); },
+        onCancel: () => { history.replaceState(null, '', '#' + gate.previousTab()); selectYear(); }
+      });
+      return;
+    }
+    if (gate) { gate.rememberTab(year); if (year !== 'fun') gate.dismiss(); }
     document.querySelectorAll('[data-year]').forEach(link => {
       if (link.dataset.year === year) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
     if (home) {
       document.querySelectorAll('[data-year-panel]').forEach(panel => { panel.hidden = panel.dataset.yearPanel !== year; });
-      document.title = `${year} · HS Math`;
+      document.title = `${year === 'fun' ? 'FUN' : year} · HS Math`;
     }
   }
+  function updateLockButtons() {
+    const open = !!gate && gate.isUnlocked();
+    document.querySelectorAll('.lock-fun, .menu-lock').forEach(button => { button.hidden = !open; });
+  }
+  const lockFun = () => {
+    gate.lock();
+    const menu = document.getElementById('site-menu');
+    if (menu && menu.open) menu.close();
+    if (location.hash === '#fun') location.hash = '#' + gate.previousTab();
+    else updateLockButtons();
+  };
+  document.querySelectorAll('.lock-fun, .menu-lock').forEach(button => button.addEventListener('click', lockFun));
+  // Relock the FUN tab when the unlock expires, including after sleep or Back.
+  const gateWatch = home && gate ? gate.watch(selectYear) : { refresh() {} };
+  window.addEventListener('pageshow', event => { if (event.persisted) selectYear(); });
   window.addEventListener('hashchange', selectYear);
   selectYear();
   const refreshToken = new URLSearchParams(location.search).get('_refresh');

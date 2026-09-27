@@ -10,6 +10,9 @@
 - Lessons use five fresh questions, gentle retries, optional visual hints after two wrong answers, and an All done finish.
 - Lesson 6.2A matches the frame from left to right: given filled spaces on the left, given number on the left, answer box on the right.
 
+- FUN now contains Cosmic Rally: a five-station auto-driving make-ten game with a safe route choice, hints, boosts, music, calm motion, pause, and replay.
+- FUN uses the shared child-lock code `1234` and relocks after 15 idle minutes. Game details and ownership are in `FUN-PLAN.md`.
+
 ## Goal for future work
 
 Build a small, reusable workflow for turning workbook screenshots into interactive kindergarten math practice. Practice follows a similar exercise in the physical workbook and generates fresh problems targeting the same skill rather than copying the workbook's exact questions.
@@ -38,4 +41,4 @@ Use focused checks proportional to the change. Verify picture/equation/input ali
 
 ## Next session
 
-Paused by the user after deployment and the equation alignment fix. Wait for the next workbook screenshot or written brief; do not add lessons, choose a framework, or expand scope in the meantime.
+Cosmic Rally passed Codex review and deployment verification checks. The browser harness passed 252 checks; two music assertions that rely on scripted clicks were verified separately using real browser taps (startup and restart), alongside music-off and master-mute checks. Math checks covered all ten starting values and 3,000 random generations. The final geometry, Back navigation, drawer layering, and paused-input fixes were checked. Physical iPad playtesting is still outstanding: verify audio/music unlock, silent-switch behavior, Home Screen safe areas, and the FUN gate. Wait for the owner’s playtest feedback, next workbook screenshot, or written brief before expanding scope.

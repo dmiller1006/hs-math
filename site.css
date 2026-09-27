@@ -118,3 +118,26 @@ body[data-page="exercise"] h1 { color: var(--ink); }
 .ten-card-art b { position: absolute; right: -9px; bottom: -11px; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: var(--on-accent); background: var(--mint); font-size: 21px; box-shadow: 0 3px 0 var(--shadow); }
 
 .reload-button { width: 100%; margin-top: 28px; }
+
+/* FUN parent gate and FUN tab. */
+.fun-gate { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom)); background: #090c19e6; backdrop-filter: blur(6px); }
+.fun-gate-card { width: min(380px, 100%); max-height: 100%; overflow: auto; padding: 22px 24px; border: 1px solid var(--line); border-radius: 28px; background: var(--bg); color: var(--ink); text-align: center; box-shadow: 0 10px 0 var(--shadow); }
+.fun-gate-card:focus { outline: none; }
+.fun-gate-card.shake { animation: fun-gate-shake .35s; }
+@keyframes fun-gate-shake { 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+.fun-gate-icon { font-size: 34px; margin: 0; }
+.fun-gate-card h2 { margin: 4px 0; font-size: 26px; }
+.fun-gate-copy { margin: 0; color: var(--muted); }
+.fun-gate-dots { display: flex; justify-content: center; gap: 16px; margin: 18px 0 6px; }
+.fun-gate-dots i { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--muted); }
+.fun-gate-dots i.filled { background: var(--blue); border-color: var(--blue); }
+.fun-gate-error { min-height: 22px; margin: 0 0 8px; color: var(--danger); font-weight: 750; }
+.fun-gate-keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.fun-gate-keys button, .fun-gate-cancel { min-height: 64px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--ink); font-size: 26px; font-weight: 800; cursor: pointer; box-shadow: 0 3px 0 var(--shadow); }
+.fun-gate-keys .spacer { visibility: hidden; }
+.fun-gate-cancel { width: 100%; margin-top: 14px; font-size: 19px; background: var(--surface-alt); }
+.year-tabs a[data-year="fun"] { color: var(--peach); }
+.year-tabs a[data-year="fun"][aria-current] { background: var(--peach); color: var(--on-accent); }
+.rally-card-art { font-size: 40px; padding: 8px 14px; border-radius: 18px; background: var(--surface-alt); transform: rotate(-6deg); }
+.lock-fun { margin-top: 28px; }
+.menu-lock { width: 100%; margin-top: 12px; }

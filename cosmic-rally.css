@@ -1,0 +1,160 @@
+/* Cosmic Rally: the scene is always night-sky; the control deck follows the site theme. */
+html, body.rally-body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+body.rally-body {
+  padding: 0; min-height: 0; background-image: none;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.rally-app {
+  position: fixed; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  touch-action: manipulation;
+}
+/* Nothing playable shows until the FUN gate confirms an unlock. */
+html:not(.fun-open) .rally-app { visibility: hidden; }
+.rally-app button, .rally-app a { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+.rally-bar { display: flex; align-items: center; gap: 12px; padding: 8px 16px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.rally-back { display: inline-flex; align-items: center; min-height: 48px; padding: 0 14px; border-radius: 14px; font-size: 18px; font-weight: 800; text-decoration: none; color: var(--blue); }
+.rally-title { font-weight: 900; font-size: 20px; letter-spacing: -.02em; color: var(--purple); }
+.rally-tools { margin-left: auto; display: flex; gap: 10px; }
+.tool-button { min-width: 56px; min-height: 56px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); font-size: 24px; cursor: pointer; }
+.tool-button[aria-pressed="true"]#calm { background: var(--surface-alt); border-color: var(--mint); }
+.tool-button[aria-pressed="false"]:is(#sound, #music) { opacity: .6; }
+
+#stage {
+  --hill: #433b72; --road: #2e2a52; --dash: #b8b1e6; --ground-top: #8d86b5; --ground-bottom: #58507f; --crater: #4c4574;
+}
+.hill { fill: var(--hill); }
+.road { fill: var(--road); }
+.road-dash { stroke: var(--dash); }
+.ground-top { stop-color: var(--ground-top); }
+.ground-bottom { stop-color: var(--ground-bottom); }
+.crater { fill: var(--crater); }
+.scene { position: relative; overflow: hidden; background: radial-gradient(ellipse at 50% 100%, #3a2f6e 0%, #1c1740 45%, #0b0a1f 100%); }
+#stage { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; display: block; }
+.car-paint { fill: var(--car); }
+.car-trim { fill: var(--car); filter: brightness(.7); }
+.antenna-star { fill: #ffe066; }
+.station-battery-body { fill: #1d2140; stroke: #c8cde8; stroke-width: 6; }
+.battery-nub { fill: #c8cde8; }
+.cell { transition: none; }
+.cell-empty { fill: #2b3160; stroke: #8f98d6; stroke-width: 3; stroke-dasharray: 8 6; }
+.cell-charged { fill: #ffd84d; stroke: #fff3b0; stroke-width: 3; }
+.cell-bolt { fill: #9a6a00; }
+.cell-hint { fill: none; stroke: #9ef0ff; stroke-width: 5; }
+.hint-label { fill: #e8fbff; font: 900 34px ui-rounded, 'SF Pro Rounded', system-ui, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.station-frame { fill: #3a3f6c; stroke: #6b73aa; stroke-width: 4; }
+.station-light { fill: #9ef0ff; }
+.cable { fill: none; stroke: #4a4f7a; stroke-width: 9; stroke-linecap: round; }
+.cable.live { stroke: #ffd84d; }
+
+.bubble {
+  position: absolute; left: 50%; top: 12px; transform: translateX(-50%); max-width: 90%;
+  padding: 10px 22px; border-radius: 999px; background: #fffdf8; color: #303957;
+  font-size: clamp(20px, 3vw, 28px); font-weight: 850; box-shadow: 0 4px 0 #0005; white-space: nowrap;
+}
+.bubble.good { background: #d8f5c0; }
+.bubble.retry { background: #ffe9d6; }
+.curtain { position: absolute; inset: 0; background: #0b0a1f; opacity: 0; pointer-events: none; }
+
+.deck { background: var(--bg); border-top: 1px solid var(--line); padding: 14px 16px 16px; }
+.panel { display: flex; align-items: center; justify-content: center; gap: 18px; min-height: 120px; }
+.big-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 80px; min-width: 160px;
+  padding: 12px 34px; border: 0; border-radius: 24px; font-size: 32px; font-weight: 900; cursor: pointer;
+  text-decoration: none; box-shadow: 0 6px 0 var(--shadow); color: var(--on-accent); background: var(--mint);
+}
+.big-button:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--shadow); }
+
+.car-choices { display: flex; gap: 18px; }
+.car-choice { width: 132px; height: 96px; border: 3px solid var(--line); border-radius: 22px; background: var(--surface); cursor: pointer; padding: 6px; }
+.car-choice svg { width: 100%; height: 100%; pointer-events: none; }
+.car-choice[aria-checked="true"] { border-color: var(--mint); box-shadow: 0 0 0 5px var(--surface-alt), 0 0 0 8px var(--mint); }
+.go-button { min-width: 180px; }
+
+.drive-note { font-size: 30px; font-weight: 900; color: var(--muted); margin: 0; }
+
+.panel-math { display: grid; grid-template-columns: auto; justify-items: center; gap: 14px; }
+.equation { display: flex; align-items: center; gap: 14px; font-size: 52px; font-weight: 900; color: var(--ink); }
+.eq-num { min-width: 72px; text-align: center; }
+.eq-given { display: inline-grid; place-items: center; min-width: 76px; height: 76px; border-radius: 16px; background: #ffd84d; color: #3d2c00; }
+.eq-blank { display: inline-grid; place-items: center; width: 84px; height: 80px; border: 4px dashed #8f98d6; border-radius: 16px; background: var(--surface); color: var(--blue); }
+.eq-blank.filled { border-style: solid; border-color: var(--blue); }
+.eq-blank.correct { border-style: solid; border-color: var(--mint); color: var(--mint); }
+.pad { display: grid; grid-template-columns: repeat(6, 72px); gap: 12px; }
+.pad button {
+  min-width: 64px; height: 72px; border: 2px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--ink);
+  font-size: 34px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 var(--shadow);
+}
+.pad button[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: var(--on-accent); }
+.rally-app[data-state="filling"] .pad button:not([aria-pressed="true"]),
+.rally-app[data-state="retry"] .pad button:not([aria-pressed="true"]) { opacity: .6; }
+.pad button.wrong { background: var(--peach); border-color: var(--peach); color: var(--on-accent); }
+.pad button.right { background: var(--mint); border-color: var(--mint); color: var(--on-accent); }
+
+.boost-button { min-height: 110px; min-width: 300px; font-size: 44px; background: linear-gradient(180deg, #ffcf5a, #ff8a3d); color: #3a1600; }
+.boost-button.pulse { animation: boost-pulse 1.2s ease-in-out infinite; }
+@keyframes boost-pulse { 50% { transform: scale(1.06); } }
+.rally-app.paused .boost-button.pulse { animation-play-state: paused; }
+
+.panel-done { flex-wrap: wrap; }
+.done-actions { display: flex; gap: 16px; }
+.menu-button-link { background: var(--surface); color: var(--ink); border: 2px solid var(--line); }
+
+.pause-screen { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; background: #0b0a1fe6; color: #fff; }
+.pause-title { font-size: 44px; font-weight: 900; margin: 0; }
+.resume-button { min-width: 220px; min-height: 100px; font-size: 40px; }
+.pause-menu { color: #b9c8ff; }
+
+/* Portrait: stack the equation above the number pad. */
+@media (orientation: portrait) {
+  .deck { padding-bottom: 24px; }
+  .panel-math { gap: 16px; }
+  .pad { grid-template-columns: repeat(6, minmax(64px, 88px)); }
+  .panel-choose { flex-direction: column; }
+}
+/* Landscape: equation, pad, and actions share one row to leave room for the scene. */
+@media (orientation: landscape) {
+  .panel-math { grid-template-columns: auto auto; align-items: center; gap: 24px; }
+  .equation { font-size: 46px; gap: 10px; }
+  .pad button { height: 66px; }
+}
+@media (orientation: landscape) and (max-width: 900px) {
+  .pad { grid-template-columns: repeat(6, 64px); gap: 8px; }
+  .panel-math { gap: 14px; }
+  .equation { font-size: 38px; }
+  .eq-given, .eq-blank { height: 66px; min-width: 64px; width: auto; }
+}
+@media (max-width: 520px) {
+  .car-choice { width: 100px; height: 80px; }
+  .car-choices { gap: 10px; }
+  .pad { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+  .pad button { min-width: 0; }
+  .equation { font-size: 40px; }
+  .rally-title { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .boost-button.pulse { animation: none; } }
+.rally-app.calm .boost-button.pulse { animation: none; }
+
+/* Course progress: five stations. */
+.rally-progress { display: flex; gap: 8px; margin-left: 8px; }
+.rally-progress span { width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--line); background: var(--surface); }
+.rally-progress .done { background: #ffd84d; border-color: #ffd84d; }
+.rally-progress .current { border-color: var(--blue); box-shadow: 0 0 0 3px var(--surface-alt); }
+
+/* Road fork: two big picture choices. */
+.panel-fork { gap: 24px; }
+.route-button {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  min-width: 190px; min-height: 120px; padding: 10px 24px; border: 0; border-radius: 26px; cursor: pointer;
+  font-size: 26px; font-weight: 900; box-shadow: 0 6px 0 var(--shadow);
+}
+.route-button:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--shadow); }
+.route-art { font-size: 48px; line-height: 1; }
+.route-crystal { background: linear-gradient(180deg, #9ef0ff, #3fa7c4); color: #0d2f3a; }
+.route-candy { background: linear-gradient(180deg, #ffc2e2, #e0609f); color: #4a0f2d; }
+
+.trophy { position: absolute; left: 50%; top: 18%; width: min(34vmin, 240px); transform: translateX(-50%); pointer-events: none; filter: drop-shadow(0 8px 0 #0006); }
+.trophy svg { width: 100%; display: block; }
+@media (max-width: 520px) { .rally-progress span { width: 16px; height: 16px; } .route-button { min-width: 140px; } }
