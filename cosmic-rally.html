@@ -12,7 +12,7 @@
 (() => {
   const token = new URLSearchParams(location.search).get('_refresh');
   const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
-  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<link rel=\"stylesheet\" " + "href=\"cosmic-rally.css" + suffix + "\">\n<script " + "src=\"fun-gate.js" + suffix + "\" defer><\/script>\n<script " + "src=\"cosmic-rally-logic.js" + suffix + "\" defer><\/script>\n<script " + "src=\"cosmic-rally.js" + suffix + "\" defer><\/script>");
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<link rel=\"stylesheet\" " + "href=\"cosmic-rally.css" + suffix + "\">\n<script " + "src=\"fun-gate.js" + suffix + "\" defer><\/script>\n<script " + "src=\"tickets.js" + suffix + "\" defer><\/script>\n<script " + "src=\"cosmic-rally-logic.js" + suffix + "\" defer><\/script>\n<script " + "src=\"cosmic-rally.js" + suffix + "\" defer><\/script>");
 })();
 </script>
 </head>
@@ -125,7 +125,7 @@
         <button class="car-choice" type="button" role="radio" aria-checked="false" data-color="#3b82f6" aria-label="Blue car"></button>
         <button class="car-choice" type="button" role="radio" aria-checked="false" data-color="#22c55e" aria-label="Green car"></button>
       </div>
-      <button class="big-button go-button" id="go" type="button" hidden>Go! <span aria-hidden="true">▶</span></button>
+      <button class="big-button go-button" id="go" type="button" hidden>Go! <span aria-hidden="true">▶</span><span class="ticket-chip go-cost" id="go-cost" aria-label="costs 1 star ticket"><span aria-hidden="true">🎟️ 1</span></span></button>
     </div>
 
     <div class="panel panel-drive" id="panel-drive" hidden>

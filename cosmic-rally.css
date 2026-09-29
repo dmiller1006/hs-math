@@ -158,3 +158,4 @@ html:not(.fun-open) .rally-app { visibility: hidden; }
 .trophy { position: absolute; left: 50%; top: 18%; width: min(34vmin, 240px); transform: translateX(-50%); pointer-events: none; filter: drop-shadow(0 8px 0 #0006); }
 .trophy svg { width: 100%; display: block; }
 @media (max-width: 520px) { .rally-progress span { width: 16px; height: 16px; } .route-button { min-width: 140px; } }
+.go-cost { font-size: 20px; margin-left: 6px; }

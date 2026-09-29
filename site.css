@@ -141,3 +141,20 @@ body[data-page="exercise"] h1 { color: var(--ink); }
 .rally-card-art { font-size: 40px; padding: 8px 14px; border-radius: 18px; background: var(--surface-alt); transform: rotate(-6deg); }
 .lock-fun { margin-top: 28px; }
 .menu-lock { width: 100%; margin-top: 12px; }
+
+/* Star tickets: earned by finishing practice sets, spent on FUN game runs. */
+.ticket-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #ffe9a8; color: #5a3d00; font-weight: 900; white-space: nowrap; }
+.ticket-earned { font-size: 22px; font-weight: 900; color: var(--mint); }
+.ticket-total { color: var(--muted); font-weight: 750; }
+.ticket-panel { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; margin: 0 0 24px; padding: 18px 22px; border: 1px solid var(--line); border-radius: 22px; background: var(--surface); }
+.ticket-panel .ticket-chip { font-size: 24px; padding: 8px 18px; }
+.ticket-panel p { flex: 1 1 260px; margin: 0; color: var(--muted); line-height: 1.5; }
+.ticket-panel .free-play[aria-pressed="true"] { border-color: var(--mint); color: var(--mint); }
+.ticket-empty { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom)); background: #090c19d9; }
+.ticket-empty-card { width: min(380px, 100%); display: grid; gap: 12px; padding: 24px; border: 1px solid var(--line); border-radius: 28px; background: var(--bg); color: var(--ink); text-align: center; box-shadow: 0 10px 0 var(--shadow); }
+.ticket-empty-card:focus { outline: none; }
+.ticket-empty-jar { font-size: 56px; margin: 0; line-height: 1; }
+.ticket-empty-card h2 { margin: 0; font-size: 28px; }
+.ticket-empty-copy { margin: 0; color: var(--muted); }
+.ticket-empty .ticket-practice { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 72px; border-radius: 22px; background: var(--mint); color: var(--on-accent); font-size: 28px; font-weight: 900; text-decoration: none; box-shadow: 0 6px 0 var(--shadow); }
+.ticket-empty .shell-button { min-height: 56px; font-size: 18px; }

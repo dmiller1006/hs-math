@@ -16,6 +16,7 @@ window.FunGate = (() => {
     const lastActive = Number(session.get(UNLOCK_KEY));
     if (lastActive && Date.now() - lastActive >= 0 && Date.now() - lastActive < IDLE_LIMIT_MS) return true;
     session.remove(UNLOCK_KEY);
+    session.remove('hs-math-free-play');
     return false;
   }
   let lastWrite = 0;
@@ -30,7 +31,8 @@ window.FunGate = (() => {
     session.set(UNLOCK_KEY, String(lastWrite));
     return true;
   }
-  function lock() { session.remove(UNLOCK_KEY); }
+  // Locking also ends grown-up Free play for star tickets.
+  function lock() { session.remove(UNLOCK_KEY); session.remove('hs-math-free-play'); }
   function rememberTab(tab) { if (tab === '2025' || tab === '2026') session.set(TAB_KEY, tab); }
   function previousTab() { const tab = session.get(TAB_KEY); return tab === '2026' ? '2026' : '2025'; }
 

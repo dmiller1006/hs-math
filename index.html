@@ -12,7 +12,7 @@
 (() => {
   const token = new URLSearchParams(location.search).get('_refresh');
   const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
-  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<script " + "src=\"lessons.js" + suffix + "\" defer><\/script>\n<script " + "src=\"fun-gate.js" + suffix + "\" defer><\/script>\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>");
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<script " + "src=\"lessons.js" + suffix + "\" defer><\/script>\n<script " + "src=\"fun-gate.js" + suffix + "\" defer><\/script>\n<script " + "src=\"tickets.js" + suffix + "\" defer><\/script>\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>");
 })();
 </script>
 </head>
@@ -51,22 +51,33 @@
       <h1 id="title-2026">So much more<br><span>to explore.</span></h1>
       <p class="hero-copy">A new year of little discoveries, one lesson at a time.</p>
     </div>
-    <div class="section-heading"><h2>Your lessons</h2><span id="lesson-count"></span></div>
+    <div class="section-heading"><h2>Your lessons</h2><span><span id="lesson-count"></span> · <span class="ticket-chip" aria-label="Star tickets"><span aria-hidden="true">🎟️</span> <span data-ticket-count>0</span></span></span></div>
     <div class="card-grid" id="lesson-cards"></div>
   </section>
   <section data-year-panel="fun" aria-labelledby="title-fun" hidden>
     <div class="hero">
       <p class="eyebrow">FUN · PLAY TIME</p>
       <h1 id="title-fun">Math that goes<br><span>zoom.</span></h1>
-      <p class="hero-copy">Drive a space car, power it up with numbers, and jump over the moon.</p>
+      <p class="hero-copy">Drive a space car, explore a creature island, and count your way to a picnic.</p>
     </div>
-    <div class="section-heading"><h2>Games</h2><span>1 game</span></div>
+    <div class="ticket-panel">
+      <span class="ticket-chip" aria-label="Star tickets"><span aria-hidden="true">🎟️</span> <span data-ticket-count>0</span></span>
+      <p>Finish a 2026 lesson to earn a star ticket. One ticket plays one Cosmic Rally course or one Creature Island level.</p>
+      <button class="shell-button free-play" type="button" aria-pressed="false">Grown-ups: Free play</button>
+    </div>
+    <div class="section-heading"><h2>Games</h2><span>2 games</span></div>
     <div class="card-grid">
       <a class="lesson-card" href="cosmic-rally.html">
         <div class="card-top"><span class="rally-card-art" aria-hidden="true">🚗🌙</span><span class="card-tag">MAKE TEN</span></div>
         <h3>Cosmic Rally</h3>
         <p>Charge the battery to ten, then tap Boost for a moon jump.</p>
         <span class="card-action">Let’s drive <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="lesson-card" href="creature-island.html">
+        <div class="card-top"><span class="rally-card-art" aria-hidden="true">🏝️🍓</span><span class="card-tag">COUNTING</span></div>
+        <h3>Creature Island</h3>
+        <p>Pick berries for a friendly creature’s picnic. Each level needs one more.</p>
+        <span class="card-action">Let’s explore <span aria-hidden="true">↗</span></span>
       </a>
     </div>
     <button class="shell-button lock-fun" type="button">🔒 Lock FUN</button>

@@ -1,0 +1,106 @@
+/* Creature Island: the clearing is always sunny; the top bar follows the site theme. */
+html, body.island-body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+body.island-body {
+  padding: 0; min-height: 0; background-image: none;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.island-app {
+  position: fixed; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background: #1f78b8; touch-action: manipulation;
+}
+/* Nothing playable shows until the FUN gate confirms an unlock. */
+html:not(.fun-open) .island-app { visibility: hidden; }
+.island-app button, .island-app a { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+.island-bar { display: flex; align-items: center; gap: 12px; padding: 8px 16px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.island-back { display: inline-flex; align-items: center; min-height: 56px; padding: 0 14px; border-radius: 14px; font-size: 18px; font-weight: 800; text-decoration: none; color: var(--blue); }
+.island-title { font-weight: 900; font-size: 20px; letter-spacing: -.02em; color: var(--mint); white-space: nowrap; }
+.island-tools { margin-left: auto; display: flex; gap: 10px; }
+.tool-button { min-width: 56px; min-height: 56px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); font-size: 24px; cursor: pointer; }
+.tool-button[aria-pressed="false"]#sound { opacity: .6; }
+
+/* Basket meter: one slot per berry, filled left to right from the quest state. */
+.basket-meter { display: flex; align-items: center; gap: 8px; margin-left: 8px; padding: 4px 12px 4px 8px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+.meter-basket { width: 46px; height: 40px; }
+.meter-slots { display: grid; grid-template-columns: repeat(var(--cols, 3), 40px); gap: 8px; }
+.meter-slots.two-rows { grid-template-columns: repeat(var(--cols, 5), 24px); gap: 4px 6px; }
+.meter-slots.two-rows .meter-slot { width: 24px; height: 24px; border-width: 2px; }
+.meter-slots.two-rows .meter-slot svg { width: 20px; height: 22px; }
+.meter-slot { width: 40px; height: 40px; border-radius: 50%; border: 3px dashed var(--line); display: grid; place-items: center; }
+.meter-slot svg { width: 34px; height: 38px; opacity: 0; transform: scale(.3); }
+.meter-slot.full { border-style: solid; border-color: #e5335f; background: #ffe3ea; }
+.meter-slot.full svg { opacity: 1; transform: none; }
+.meter-slot.pop svg { animation: slot-pop .5s cubic-bezier(.3, 1.6, .5, 1); }
+.meter-slot.wanted { animation: slot-want 1s ease-in-out 3; }
+@keyframes slot-pop { 0% { transform: scale(.3); } 100% { transform: none; } }
+@keyframes slot-want { 50% { border-color: #ffb347; box-shadow: 0 0 0 5px #ffb34755; } }
+
+.scene { position: relative; overflow: hidden; background: radial-gradient(ellipse at 50% 50%, #4cc6e4 0%, #2f98cf 55%, #1f6fae 100%); cursor: pointer; }
+#stage { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; display: block; touch-action: none; }
+
+/* Ambient motion: CSS loops freeze with the game clock and switch off for reduced motion. */
+.glint { animation: glint 4.8s ease-in-out infinite; opacity: 0; }
+@keyframes glint { 30% { opacity: .9; } 60% { opacity: 0; } }
+.foam { animation: foam 3.6s ease-in-out infinite; }
+@keyframes foam { 50% { opacity: .35; } }
+.tuft { transform-box: fill-box; transform-origin: 50% 100%; animation: sway 3.2s ease-in-out infinite; }
+.canopy { transform-box: fill-box; transform-origin: 50% 100%; animation: sway-soft 5s ease-in-out infinite; }
+@keyframes sway { 50% { transform: rotate(6deg); } }
+@keyframes sway-soft { 50% { transform: rotate(1.6deg); } }
+.canopy.rustle { animation: rustle .6s ease-in-out; }
+@keyframes rustle { 20% { transform: rotate(-4deg); } 45% { transform: rotate(4deg); } 70% { transform: rotate(-2deg); } }
+.rock-body.wobble { transform-box: fill-box; transform-origin: 50% 100%; animation: wobble .45s ease-in-out; }
+@keyframes wobble { 30% { transform: rotate(-3deg) scale(1.03); } 65% { transform: rotate(2deg); } }
+.plant-cue { animation: cue 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 50%; }
+@keyframes cue { 50% { opacity: .35; transform: scale(.85); } }
+.plant-berry { transform-box: fill-box; transform-origin: 50% 100%; animation: berry-bob 1.6s ease-in-out infinite; }
+@keyframes berry-bob { 50% { transform: translateY(-4px); } }
+.plant-leaves.shake { transform-box: fill-box; transform-origin: 50% 100%; animation: rustle .5s ease-in-out; }
+.lily { transform-box: fill-box; transform-origin: 50% 50%; animation: lily 7s ease-in-out infinite; }
+@keyframes lily { 50% { transform: translate(4px, 2px) rotate(8deg); } }
+.island-app.is-paused * { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) {
+  .glint, .foam, .tuft, .canopy, .plant-berry, .lily { animation: none; }
+  .glint { opacity: .5; }
+  .plant-cue { animation: none; opacity: .8; }
+  .meter-slot.pop svg, .meter-slot.wanted { animation: none; }
+  .canopy.rustle, .rock-body.wobble, .plant-leaves.shake { animation: none; }
+}
+
+.big-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 80px; min-width: 160px;
+  padding: 12px 34px; border: 0; border-radius: 24px; font-size: 32px; font-weight: 900; cursor: pointer;
+  text-decoration: none; box-shadow: 0 6px 0 var(--shadow); color: var(--on-accent); background: var(--mint);
+}
+.big-button:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--shadow); }
+.level-badge { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 999px; background: #ffe066; color: #4a3200; font-weight: 900; font-size: 18px; white-space: nowrap; }
+.level-card { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; padding: 16px; background: #0b2a3a66; }
+.level-card-box { display: grid; justify-items: center; gap: 14px; padding: 24px 32px; border-radius: 30px; background: var(--bg); color: var(--ink); border: 1px solid var(--line); box-shadow: 0 10px 0 #0005; max-width: 100%; }
+.level-card-title { margin: 0; font-size: 40px; font-weight: 900; }
+.level-card-berries { display: grid; grid-template-columns: repeat(var(--cols, 3), 48px); gap: 8px; }
+.level-card-berries svg { width: 48px; height: 54px; display: block; }
+.level-card-jar { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 22px; }
+.free-tag { padding: 4px 12px; border-radius: 999px; border: 2px solid var(--mint); color: var(--mint); font-weight: 900; font-size: 16px; }
+.play-button { min-width: 240px; min-height: 90px; font-size: 38px; }
+.play-cost { font-size: 20px; margin-left: 8px; }
+.next-float {
+  position: absolute; right: max(16px, env(safe-area-inset-right)); bottom: 16px; z-index: 2;
+  background: #ffd84d; color: #4a3200; box-shadow: 0 6px 0 #0005;
+}
+
+.pause-screen { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: #0b2a3ae6; color: #fff; }
+.pause-title { font-size: 44px; font-weight: 900; margin: 0; }
+.resume-button { min-width: 240px; min-height: 100px; font-size: 40px; }
+.replay-button { min-width: 240px; background: #ffd84d; color: #4a3200; }
+.pause-menu { color: #b9e8ff; }
+
+@media (max-width: 1000px) { .island-title { display: none; } }
+@media (max-width: 520px) {
+  .island-bar { gap: 6px; padding: 8px; }
+  .island-back { padding: 0 8px; }
+  .meter-basket { display: none; }
+  .meter-slot { width: 34px; height: 34px; }
+  .tool-button { min-width: 52px; }
+}

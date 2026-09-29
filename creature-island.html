@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<title>Creature Island · HS Math</title>
+<script>
+// A drawer reload gives every page asset the same fresh cache key.
+(() => {
+  const token = new URLSearchParams(location.search).get('_refresh');
+  const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<link rel=\"stylesheet\" " + "href=\"creature-island.css" + suffix + "\">\n<script " + "src=\"fun-gate.js" + suffix + "\" defer><\/script>\n<script " + "src=\"tickets.js" + suffix + "\" defer><\/script>\n<script " + "src=\"creature-island-logic.js" + suffix + "\" defer><\/script>\n<script " + "src=\"creature-island.js" + suffix + "\" defer><\/script>");
+})();
+</script>
+</head>
+<body data-page="game" class="island-body">
+<div class="island-app" id="app">
+  <header class="island-bar">
+    <a class="island-back" href="index.html#fun">← Menu</a>
+    <span class="island-title" aria-hidden="true">Creature Island</span>
+    <div class="level-badge" id="level-badge" role="img" aria-label="Level 1"><span aria-hidden="true">⭐ Level <b id="level-num">1</b></span></div>
+    <div class="basket-meter" id="basket-meter" role="img" aria-label="Basket: 0 of 3 berries">
+      <svg class="meter-basket" viewBox="-30 -30 60 50" aria-hidden="true">
+        <path d="M-20 -6 C-20 -30 20 -30 20 -6" fill="none" stroke="#9a5b24" stroke-width="5" stroke-linecap="round"/>
+        <path d="M-26 -8 H26 L20 16 C19 19 17 20 14 20 H-14 C-17 20 -19 19 -20 16Z" fill="#d48b3f"/>
+        <path d="M-22 1 H22 M-19 10 H19" stroke="#a8652a" stroke-width="3"/>
+      </svg>
+      <div class="meter-slots" id="meter-slots"></div>
+    </div>
+    <div class="island-tools">
+      <button class="tool-button" id="sound" type="button" aria-pressed="true" aria-label="Sound on"><span aria-hidden="true">🔊</span></button>
+      <button class="tool-button" id="pause" type="button" aria-label="Pause"><span aria-hidden="true">⏸</span></button>
+    </div>
+  </header>
+
+  <div class="scene" id="scene">
+    <svg id="stage" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="stage-label">
+      <title id="stage-label">A small island clearing with a friendly creature, berry bushes, and a picnic blanket</title>
+      <defs>
+        <radialGradient id="sea-fill" cx="50%" cy="52%" r="75%">
+          <stop offset="0" stop-color="#5fd3ea"/><stop offset=".55" stop-color="#34a9d6"/><stop offset="1" stop-color="#1f78b8"/>
+        </radialGradient>
+        <radialGradient id="grass-fill" cx="50%" cy="45%" r="60%">
+          <stop offset="0" stop-color="#9be36b"/><stop offset=".75" stop-color="#7fcf55"/><stop offset="1" stop-color="#69bb47"/>
+        </radialGradient>
+        <radialGradient id="pond-fill" cx="45%" cy="40%" r="65%">
+          <stop offset="0" stop-color="#8fe6f5"/><stop offset=".7" stop-color="#46b8e0"/><stop offset="1" stop-color="#2f93c6"/>
+        </radialGradient>
+        <radialGradient id="berry-fill" cx="35%" cy="30%" r="70%">
+          <stop offset="0" stop-color="#ff9ab5"/><stop offset=".5" stop-color="#e5335f"/><stop offset="1" stop-color="#a3163f"/>
+        </radialGradient>
+        <radialGradient id="cue-glow" r="50%">
+          <stop offset="0" stop-color="#fff7b0" stop-opacity=".85"/><stop offset="1" stop-color="#fff7b0" stop-opacity="0"/>
+        </radialGradient>
+        <pattern id="gingham" width="24" height="24" patternUnits="userSpaceOnUse">
+          <rect width="24" height="24" fill="#fff4ef"/>
+          <rect width="12" height="24" fill="#ff8f8f" opacity=".55"/>
+          <rect width="24" height="12" fill="#ff8f8f" opacity=".55"/>
+        </pattern>
+        <symbol id="berry" viewBox="-16 -20 32 36" overflow="visible">
+          <circle r="13" fill="url(#berry-fill)"/>
+          <circle cx="-4" cy="-4" r="3.5" fill="#fff" opacity=".75"/>
+          <circle cx="3" cy="4" r="1.3" fill="#ffd1dc"/><circle cx="-4" cy="6" r="1.3" fill="#ffd1dc"/><circle cx="6" cy="-3" r="1.3" fill="#ffd1dc"/>
+          <path d="M0 -12 C-7 -20 -12 -15 -11 -12 C-7 -11 -3 -12 0 -12 C3 -18 9 -17 10 -13 C6 -11 3 -11 0 -12Z" fill="#3fa34d"/>
+        </symbol>
+      </defs>
+      <g id="layer-sea"></g>
+      <g id="layer-ground"></g>
+      <g id="layer-marks"></g>
+      <g id="layer-sprites"></g>
+      <g id="layer-fx"></g>
+      <g id="layer-bubble"></g>
+    </svg>
+    <button class="big-button next-float" id="next-float" type="button" hidden>Next level <span aria-hidden="true">▶</span></button>
+    <div class="level-card" id="level-card" hidden>
+      <div class="level-card-box">
+        <p class="level-card-title"><span aria-hidden="true">⭐</span> Level <span id="card-level">1</span></p>
+        <div class="level-card-berries" id="card-berries" role="img" aria-label="3 berries"></div>
+        <p class="level-card-jar"><span class="ticket-chip" aria-label="Star tickets"><span aria-hidden="true">🎟️</span> <span data-ticket-count>0</span></span><span class="free-tag" id="free-tag" hidden>Free play</span></p>
+        <button class="big-button play-button" id="play" type="button"><span aria-hidden="true">▶</span> Play<span class="ticket-chip play-cost" id="play-cost" aria-label="costs 1 star ticket"><span aria-hidden="true">🎟️ 1</span></span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pause-screen" id="pause-screen" hidden>
+    <p class="pause-title">Paused</p>
+    <button class="big-button resume-button" id="resume" type="button"><span aria-hidden="true">▶</span> Play</button>
+    <button class="big-button replay-button" id="restart-level" type="button" hidden><span aria-hidden="true">↻</span> Start over</button>
+    <a class="island-back pause-menu" href="index.html#fun">← Menu</a>
+  </div>
+</div>
+<pre id="test-results" hidden></pre>
+</body>
+</html>

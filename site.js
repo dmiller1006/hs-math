@@ -130,6 +130,27 @@
     else updateLockButtons();
   };
   document.querySelectorAll('.lock-fun, .menu-lock').forEach(button => button.addEventListener('click', lockFun));
+  // Star-ticket jar and grown-up Free play on the home screen.
+  const tickets = window.StarTickets;
+  function renderTickets() {
+    if (!tickets) return;
+    document.querySelectorAll('[data-ticket-count]').forEach(node => { node.textContent = tickets.balance(); });
+    document.querySelectorAll('.free-play').forEach(button => {
+      const on = tickets.isFreePlay();
+      button.setAttribute('aria-pressed', String(on));
+      button.textContent = on ? 'Free play is on ✓ (tap to end)' : 'Grown-ups: Free play';
+    });
+  }
+  if (tickets) {
+    tickets.onChange(renderTickets);
+    document.querySelectorAll('.free-play').forEach(button => button.addEventListener('click', () => {
+      if (tickets.isFreePlay()) tickets.setFreePlay(false);
+      else tickets.requestFreePlay();
+    }));
+    window.addEventListener('pageshow', renderTickets);
+    window.addEventListener('hashchange', renderTickets);
+    renderTickets();
+  }
   // Relock the FUN tab when the unlock expires, including after sleep or Back.
   const gateWatch = home && gate ? gate.watch(selectYear) : { refresh() {} };
   window.addEventListener('pageshow', event => { if (event.persisted) selectYear(); });

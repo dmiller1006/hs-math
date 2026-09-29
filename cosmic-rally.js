@@ -516,8 +516,13 @@
     sfx.pick();
     if (!calm) play(360, t => setCar(CAR_REST_X, Math.sin(Math.PI * t / 360) * 26), () => setCar(CAR_REST_X));
   }
+  // One star ticket buys one course; an unfinished course (even after a reload) resumes free.
+  const tickets = window.StarTickets;
+  function renderGoCost() { $('go-cost').hidden = !tickets || !tickets.wouldCharge('cosmic-rally'); }
   function go() {
     if (paused || state !== 'choose' || !carColor) return;
+    if (tickets && !tickets.startRun('cosmic-rally')) { tickets.showEmpty({ onFreePlay: renderGoCost }); return; }
+    renderGoCost();
     sfx.vroom();
     driveTo(DRIVE_DIST, DRIVE_MS, null, arriveAtStation);
   }
@@ -799,6 +804,7 @@
   }
 
   function finish() {
+    if (tickets) tickets.finishRun('cosmic-rally');
     setState('done');
     renderProgress();
     showPanel('done');
@@ -845,6 +851,7 @@
     renderProgress();
     showPanel('choose');
     $('go').hidden = !carColor;
+    renderGoCost();
   }
   function replay() {
     if (paused || state !== 'done') return;

@@ -11,7 +11,7 @@
 (() => {
   const token = new URLSearchParams(location.search).get('_refresh');
   const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
-  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<link rel=\"stylesheet\" " + "href=\"lesson.css" + suffix + "\">\n<script " + "src=\"lessons.js" + suffix + "\" defer><\/script>\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>\n<script " + "src=\"lesson.js" + suffix + "\" defer><\/script>");
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<link rel=\"stylesheet\" " + "href=\"lesson.css" + suffix + "\">\n<script " + "src=\"lessons.js" + suffix + "\" defer><\/script>\n<script " + "src=\"tickets.js" + suffix + "\" defer><\/script>\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>\n<script " + "src=\"lesson.js" + suffix + "\" defer><\/script>");
 })();
 </script>
 </head>
@@ -38,6 +38,8 @@
 <div aria-hidden="true" class="finish-art">🌟 🚗 🌟</div>
 <h2 tabindex="-1" id="finish-title">All done!</h2>
 <p>You practiced five questions.</p>
+<p class="ticket-earned" id="ticket-earned" hidden><span aria-hidden="true">🎟️</span> You earned a star ticket!</p>
+<p class="ticket-total">Ticket jar: <span class="ticket-chip"><span aria-hidden="true">🎟️</span> <span id="ticket-count">0</span></span></p>
 <button id="again" class="lesson-button primary">Try again</button>
 <a class="lesson-button" href="index.html#2026">2026 lessons</a>
 </section>

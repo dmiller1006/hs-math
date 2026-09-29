@@ -25,7 +25,7 @@
     }
   };
   const skill = skills[lesson.skill];
-  let questions, index, values, selected, mistakes, hint, locked, counted;
+  let questions, index, values, selected, mistakes, hint, locked, counted, setId;
   let audioContext;
   function shuffle(items) {
     for (let i = items.length - 1; i > 0; i--) {
@@ -39,6 +39,8 @@
     const given = shuffle([Math.random() < .5 ? 0 : 10, ...shuffle([1,2,3,4,5,6,7,8,9]).slice(0, 4)]);
     questions = given.map(n => ({ given: n }));
     index = 0;
+    // Each set of five gets its own id, so a finished set pays out one star ticket at most.
+    setId = `lesson-${lesson.id}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     $('practice').hidden = false;
     $('finish').hidden = true;
     render();
@@ -157,9 +159,15 @@
     setTimeout(() => {
       index++;
       if (index < questions.length) render();
-      else { $('practice').hidden = true; $('finish').hidden = false; $('finish-title').focus(); }
+      else { $('practice').hidden = true; $('finish').hidden = false; $('finish-title').focus(); earnTicket(); }
     }, 2000);
   });
+  function earnTicket() {
+    const tickets = window.StarTickets;
+    if (!tickets) return;
+    $('ticket-earned').hidden = !tickets.award(setId);
+    $('ticket-count').textContent = tickets.balance();
+  }
   $('again').addEventListener('click', start);
   start();
 })();
