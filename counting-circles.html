@@ -258,7 +258,7 @@
 (() => {
   const token = new URLSearchParams(location.search).get('_refresh');
   const suffix = token && /^\d+$/.test(token) ? '?v=' + token : '';
-  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>");
+  document.write("<script " + "src=\"theme.js" + suffix + "\"><\/script>\n<link rel=\"stylesheet\" " + "href=\"site.css" + suffix + "\">\n<script " + "src=\"tickets.js" + suffix + "\" defer><\/script>\n<script " + "src=\"site.js" + suffix + "\" defer><\/script>");
 })();
 </script>
 </head>
@@ -289,6 +289,7 @@
 </div>
 
 <div class="score" id="score"></div>
+<div class="ticket-progress" id="ticket-progress" role="status" aria-live="polite"></div>
 
 <canvas class="confetti" id="confetti"></canvas>
 
@@ -300,6 +301,22 @@ var maxNumber = 20;
 var answered = false;
 var advancing = false;
 var successiveOnly = true;
+var practiceSet = null;
+
+function renderTicketProgress(earned) {
+  var tickets = window.StarTickets;
+  var count = practiceSet ? practiceSet.count() : 0;
+  var balance = tickets ? tickets.balance() : 0;
+  document.getElementById('ticket-progress').textContent = earned
+    ? '🎟️ Star ticket earned! Jar: ' + balance
+    : '🎟️ Jar: ' + balance + ' · ' + count + ' of 5 solved';
+}
+
+function recordSolved() {
+  if (!window.StarTickets) return;
+  if (!practiceSet) practiceSet = window.StarTickets.practiceSet('counting-circles');
+  renderTicketProgress(practiceSet.recordCorrect());
+}
 
 document.getElementById('allow25').addEventListener('change', function() {
   maxNumber = this.checked ? 30 : 20;
@@ -318,6 +335,7 @@ function newProblem() {
   document.getElementById('feedback').className = 'feedback';
   renderExercise();
   updateScore();
+  renderTicketProgress(false);
 }
 
 function renderExercise() {
@@ -415,6 +433,7 @@ function checkAnswer() {
       totalProblems++;
       answered = true;
     }
+    recordSolved();
     playCorrectSound();
     launchConfetti();
     advancing = true;
@@ -543,6 +562,7 @@ function launchConfetti() {
 }
 
 newProblem();
+window.addEventListener('DOMContentLoaded', function() { renderTicketProgress(false); });
 </script>
 </body>
 </html>

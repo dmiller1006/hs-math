@@ -145,6 +145,7 @@ body[data-page="exercise"] h1 { color: var(--ink); }
 /* Star tickets: earned by finishing practice sets, spent on FUN game runs. */
 .ticket-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #ffe9a8; color: #5a3d00; font-weight: 900; white-space: nowrap; }
 .ticket-earned { font-size: 22px; font-weight: 900; color: var(--mint); }
+.ticket-progress { min-height: 28px; margin-bottom: 12px; color: var(--mint); font-size: 18px; font-weight: 800; text-align: center; }
 .ticket-total { color: var(--muted); font-weight: 750; }
 .ticket-panel { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; margin: 0 0 24px; padding: 18px 22px; border: 1px solid var(--line); border-radius: 22px; background: var(--surface); }
 .ticket-panel .ticket-chip { font-size: 24px; padding: 8px 18px; }
@@ -156,5 +157,5 @@ body[data-page="exercise"] h1 { color: var(--ink); }
 .ticket-empty-jar { font-size: 56px; margin: 0; line-height: 1; }
 .ticket-empty-card h2 { margin: 0; font-size: 28px; }
 .ticket-empty-copy { margin: 0; color: var(--muted); }
-.ticket-empty .ticket-practice { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 72px; border-radius: 22px; background: var(--mint); color: var(--on-accent); font-size: 28px; font-weight: 900; text-decoration: none; box-shadow: 0 6px 0 var(--shadow); }
+.ticket-empty .ticket-practice { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 60px; border-radius: 22px; background: var(--mint); color: var(--on-accent); font-size: 22px; font-weight: 900; text-decoration: none; box-shadow: 0 6px 0 var(--shadow); }
 .ticket-empty .shell-button { min-height: 56px; font-size: 18px; }

@@ -41,6 +41,22 @@ window.StarTickets = (() => {
     save(data);
     return true;
   }
+  // Endless activities pay out after each five correctly solved problems.
+  function practiceSet(activity) {
+    let solved = 0;
+    let setId = `${activity}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    return {
+      count: () => solved,
+      recordCorrect() {
+        solved++;
+        if (solved < 5) return false;
+        const earned = award(setId);
+        solved = 0;
+        setId = `${activity}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+        return earned;
+      }
+    };
+  }
   const activeRun = game => load().runs[game] || null;
   // Resume the matching unfinished run for free, or spend one ticket on a new run. Returns the run, or null.
   function startRun(game, info = {}) {
@@ -94,8 +110,9 @@ window.StarTickets = (() => {
       <div class="ticket-empty-card" tabindex="-1">
         <p class="ticket-empty-jar" aria-hidden="true">🫙</p>
         <h2 id="ticket-empty-title">Out of tickets</h2>
-        <p class="ticket-empty-copy">Finish a lesson to earn a <span aria-hidden="true">🎟️</span> star ticket.</p>
-        <a class="big-button ticket-practice" href="index.html#2026"><span aria-hidden="true">✏️</span> Practice</a>
+        <p class="ticket-empty-copy">Solve five 2025 activity problems or finish a 2026 lesson to earn a <span aria-hidden="true">🎟️</span> star ticket.</p>
+        <a class="big-button ticket-practice" href="index.html#2025"><span aria-hidden="true">✏️</span> 2025 activities</a>
+        <a class="big-button ticket-practice" href="index.html#2026"><span aria-hidden="true">✏️</span> 2026 lessons</a>
         <button class="shell-button ticket-free" type="button">Grown-ups: Free play</button>
         <button class="shell-button ticket-back" type="button">Back</button>
       </div>`;
@@ -108,5 +125,5 @@ window.StarTickets = (() => {
   }
   const isShowingEmpty = () => !!emptyCard;
 
-  return { balance, award, activeRun, startRun, finishRun, wouldCharge, isFreePlay, setFreePlay, requestFreePlay, onChange, showEmpty, isShowingEmpty };
+  return { balance, award, practiceSet, activeRun, startRun, finishRun, wouldCharge, isFreePlay, setFreePlay, requestFreePlay, onChange, showEmpty, isShowingEmpty };
 })();
