@@ -516,15 +516,29 @@
     sfx.pick();
     if (!calm) play(360, t => setCar(CAR_REST_X, Math.sin(Math.PI * t / 360) * 26), () => setCar(CAR_REST_X));
   }
-  // One star ticket buys one course; an unfinished course (even after a reload) resumes free.
+  // One star ticket buys one course; an unfinished course (even after a reload) resumes free
+  // at the next station, with the same batteries and road.
   const tickets = window.StarTickets;
+  const pendingFork = () => index === FORK_AFTER && route === 'moon';
+  function saveProgress() {
+    if (tickets) tickets.saveProgress('cosmic-rally', { givens: course.map(p => p.given), index, route });
+  }
+  function savedProgress() {
+    const run = tickets && tickets.activeRun('cosmic-rally');
+    const saved = run && run.progress;
+    if (!saved || !Array.isArray(saved.givens) || saved.givens.length !== PAYOFFS.length) return null;
+    if (!Number.isInteger(saved.index) || saved.index < 1 || saved.index >= PAYOFFS.length) return null;
+    if (!THEMES[saved.route] || (saved.index > FORK_AFTER && saved.route === 'moon')) return null;
+    return saved;
+  }
   function renderGoCost() { $('go-cost').hidden = !tickets || !tickets.wouldCharge('cosmic-rally'); }
   function go() {
     if (paused || state !== 'choose' || !carColor) return;
     if (tickets && !tickets.startRun('cosmic-rally')) { tickets.showEmpty({ onFreePlay: renderGoCost }); return; }
     renderGoCost();
     sfx.vroom();
-    driveTo(DRIVE_DIST, DRIVE_MS, null, arriveAtStation);
+    if (pendingFork()) goToFork();
+    else driveTo(DRIVE_DIST, DRIVE_MS, null, arriveAtStation);
   }
 
   // Drive the road automatically. The car eases back to its resting spot while the camera is moving.
@@ -780,7 +794,8 @@
     index++;
     renderProgress();
     if (index >= PAYOFFS.length) { finish(); return; }
-    if (index === FORK_AFTER && route === 'moon') { goToFork(); return; }
+    saveProgress();
+    if (pendingFork()) { goToFork(); return; }
     startLeg();
   }
   function goToFork() {
@@ -797,6 +812,7 @@
     if (paused || state !== 'fork') return;
     const from = THEMES[route];
     route = choice;
+    saveProgress();
     document.querySelectorAll('.fork-board').forEach(board => board.setAttribute('opacity', board.dataset.route === choice ? 1 : .35));
     sfx.pick();
     sfx.vroom();
@@ -831,8 +847,9 @@
     fxBack.replaceChildren(); fxFront.replaceChildren();
     legs.forEach(g => g.remove());
     legs = [];
-    route = 'moon';
-    applyTheme(THEMES.moon);
+    const saved = savedProgress();
+    route = saved ? saved.route : 'moon';
+    applyTheme(THEMES[route]);
     setCamera(0);
     setFlame(0);
     setMoon(MOON_HIDDEN_Y);
@@ -840,14 +857,14 @@
     $('curtain').style.opacity = 0;
     $('trophy').hidden = true;
     $('trophy').style.transform = '';
-    course = Logic.makeCourse({ count: PAYOFFS.length, forced: forcedCharges });
-    index = 0;
+    course = Logic.makeCourse({ count: PAYOFFS.length, forced: saved ? saved.givens : forcedCharges });
+    index = saved ? saved.index : 0;
     problem = null; selected = null; misses = 0; hintShown = false;
     $('equation').replaceChildren();
     say('');
     setMusicLevel(1);
     setState('choose');
-    leg = buildLeg(0, 0);
+    leg = pendingFork() ? null : buildLeg(index, 0);
     renderProgress();
     showPanel('choose');
     $('go').hidden = !carColor;

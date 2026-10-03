@@ -302,9 +302,11 @@ var answered = false;
 var advancing = false;
 var successiveOnly = true;
 var practiceSet = null;
+var misses = 0;
 
 function renderTicketProgress(earned) {
   var tickets = window.StarTickets;
+  if (tickets && !practiceSet) practiceSet = tickets.practiceSet('counting-circles');
   var count = practiceSet ? practiceSet.count() : 0;
   var balance = tickets ? tickets.balance() : 0;
   document.getElementById('ticket-progress').textContent = earned
@@ -312,10 +314,13 @@ function renderTicketProgress(earned) {
     : '🎟️ Jar: ' + balance + ' · ' + count + ' of 5 solved';
 }
 
+// Tickets load after this script; show saved progress once they are ready.
+document.addEventListener('DOMContentLoaded', function() { renderTicketProgress(false); });
+
 function recordSolved() {
   if (!window.StarTickets) return;
   if (!practiceSet) practiceSet = window.StarTickets.practiceSet('counting-circles');
-  renderTicketProgress(practiceSet.recordCorrect());
+  renderTicketProgress(practiceSet.recordCorrect(misses));
 }
 
 document.getElementById('allow25').addEventListener('change', function() {
@@ -330,6 +335,7 @@ document.getElementById('inOrder').addEventListener('change', function() {
 function newProblem() {
   targetNumber = 10 + Math.floor(Math.random() * (maxNumber - 10 + 1));
   answered = false;
+  misses = 0;
   advancing = false;
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
@@ -449,6 +455,7 @@ function checkAnswer() {
     } else {
       hint = 'Not enough! You colored ' + filled + '.';
     }
+    if (filled > 0) misses++;
     playWrongSound();
     fb.textContent = hint;
     fb.className = 'feedback wrong';

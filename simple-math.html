@@ -276,9 +276,11 @@ var answered = false, advancing = false;
 var mode = 'addition';
 var difficulty = 'easy';
 var practiceSet = null;
+var misses = 0;
 
 function renderTicketProgress(earned) {
   var tickets = window.StarTickets;
+  if (tickets && !practiceSet) practiceSet = tickets.practiceSet('simple-math');
   var count = practiceSet ? practiceSet.count() : 0;
   var balance = tickets ? tickets.balance() : 0;
   document.getElementById('ticket-progress').textContent = earned
@@ -286,10 +288,13 @@ function renderTicketProgress(earned) {
     : '🎟️ Jar: ' + balance + ' · ' + count + ' of 5 solved';
 }
 
+// Tickets load after this script; show saved progress once they are ready.
+document.addEventListener('DOMContentLoaded', function() { renderTicketProgress(false); });
+
 function recordSolved() {
   if (!window.StarTickets) return;
   if (!practiceSet) practiceSet = window.StarTickets.practiceSet('simple-math');
-  renderTicketProgress(practiceSet.recordCorrect());
+  renderTicketProgress(practiceSet.recordCorrect(misses));
 }
 
 function setMode(m) {
@@ -366,6 +371,7 @@ function newProblem() {
 
   answer = '';
   answered = false;
+  misses = 0;
   advancing = false;
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
@@ -435,6 +441,7 @@ function checkAnswer() {
     advancing = true;
     setTimeout(function() { newProblem(); }, 2000);
   } else {
+    misses++;
     fb.textContent = 'Not quite \u2014 try again!';
     fb.className = 'feedback wrong';
     playWrongSound();

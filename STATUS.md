@@ -12,6 +12,11 @@
 
 - FUN now contains Cosmic Rally: a five-station auto-driving make-ten game with a safe route choice, hints, boosts, music, calm motion, pause, and replay.
 - FUN uses the shared child-lock code `1234` and relocks after 15 idle minutes. Game details and ownership are in `FUN-PLAN.md`.
+- FUN also contains Creature Island: tap to walk, pick berries, deliver a picnic. Level N needs N + 2 berries (max ten). Brief and owner decisions are in `EXPLORER-PLAN.md`.
+- Star tickets (`tickets.js`): five credited 2025 problems or one finished 2026 lesson set earns a ticket; one ticket starts a Cosmic Rally course or a Creature Island level.
+- A problem only earns credit if solved within three wrong tries (a lesson set needs all five within the limit), so tapping every number does not earn.
+- Unfinished runs resume free where they left off: Cosmic Rally at the next station (same batteries and road), Creature Island with the berries already picked. 2025 progress toward a ticket ("3 of 5") survives reloads.
+- Creature Island "Start over" within a level is free (owner decision), which still allows replaying one level without finishing.
 
 ## Goal for future work
 
@@ -40,5 +45,8 @@ Use focused checks proportional to the change. Verify picture/equation/input ali
 - The drawer's Reload app button requests fresh page and asset URLs.
 
 ## Next session
+
+Not yet verified in a browser or on the iPad: the credit rule, the lesson finish message, and resuming Cosmic Rally/Creature Island after a reload. Ticket rules pass a Node logic check.
+
 
 Cosmic Rally passed Codex review and deployment verification checks. The browser harness passed 252 checks; two music assertions that rely on scripted clicks were verified separately using real browser taps (startup and restart), alongside music-off and master-mute checks. Math checks covered all ten starting values and 3,000 random generations. The final geometry, Back navigation, drawer layering, and paused-input fixes were checked. Physical iPad playtesting is still outstanding: verify audio/music unlock, silent-switch behavior, Home Screen safe areas, and the FUN gate. Wait for the owner’s playtest feedback, next workbook screenshot, or written brief before expanding scope.

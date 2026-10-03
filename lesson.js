@@ -25,7 +25,7 @@
     }
   };
   const skill = skills[lesson.skill];
-  let questions, index, values, selected, mistakes, hint, locked, counted, setId;
+  let questions, index, values, selected, mistakes, hint, locked, counted, setId, credited;
   let audioContext;
   function shuffle(items) {
     for (let i = items.length - 1; i > 0; i--) {
@@ -41,6 +41,8 @@
     index = 0;
     // Each set of five gets its own id, so a finished set pays out one star ticket at most.
     setId = `lesson-${lesson.id}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    // Hints and a few retries keep the ticket; guessing through many numbers on a question does not.
+    credited = true;
     $('practice').hidden = false;
     $('finish').hidden = true;
     render();
@@ -155,6 +157,7 @@
       $('help').hidden = mistakes < 2 || hint;
       return;
     }
+    if (window.StarTickets && !window.StarTickets.earnsCredit(mistakes)) credited = false;
     locked = true; update(); $('feedback').textContent = 'You did it! 🌟'; celebrate();
     setTimeout(() => {
       index++;
@@ -165,7 +168,9 @@
   function earnTicket() {
     const tickets = window.StarTickets;
     if (!tickets) return;
-    $('ticket-earned').hidden = !tickets.award(setId);
+    const earned = credited && tickets.award(setId);
+    $('ticket-earned').hidden = !earned;
+    $('ticket-missed').hidden = earned || credited;
     $('ticket-count').textContent = tickets.balance();
   }
   $('again').addEventListener('click', start);

@@ -1,8 +1,10 @@
 // Star tickets: practice earns them, FUN games spend them. One jar per device, kept in localStorage.
 // Rules live here once for every page:
 // - Finishing a five-question practice set earns one ticket; each set id pays out only once.
+// - A problem only counts toward a ticket if it was solved within MAX_MISSES_FOR_CREDIT wrong tries,
+//   so tapping every number until one works does not earn. It still counts as solved on screen.
 // - Starting a game run (a Creature Island level, a Cosmic Rally course) costs one ticket.
-//   An unfinished run resumes free, including after a reload.
+//   An unfinished run resumes free where it left off (games save progress with saveProgress).
 // - Grown-up Free play (behind the FUN code) plays without spending, until FUN locks again.
 window.StarTickets = (() => {
   const testing = new URLSearchParams(location.search).has('test');
@@ -10,8 +12,10 @@ window.StarTickets = (() => {
   const FREE_KEY = testing ? 'hs-math-free-play-test' : 'hs-math-free-play';
   const MAX_BALANCE = 99;
   const MAX_REMEMBERED = 200;
+  const MAX_MISSES_FOR_CREDIT = 3;
+  const earnsCredit = misses => (Number(misses) || 0) <= MAX_MISSES_FOR_CREDIT;
 
-  const blank = () => ({ balance: 0, awarded: [], runs: {} });
+  const blank = () => ({ balance: 0, awarded: [], runs: {}, sets: {} });
   function load() {
     try {
       const data = JSON.parse(localStorage.getItem(KEY));
@@ -19,7 +23,8 @@ window.StarTickets = (() => {
       return {
         balance: Math.max(0, Math.min(MAX_BALANCE, Math.floor(Number(data.balance)) || 0)),
         awarded: Array.isArray(data.awarded) ? data.awarded.filter(id => typeof id === 'string') : [],
-        runs: data.runs && typeof data.runs === 'object' ? data.runs : {}
+        runs: data.runs && typeof data.runs === 'object' ? data.runs : {},
+        sets: data.sets && typeof data.sets === 'object' ? data.sets : {}
       };
     } catch (_) { return blank(); }
   }
@@ -41,18 +46,33 @@ window.StarTickets = (() => {
     save(data);
     return true;
   }
-  // Endless activities pay out after each five correctly solved problems.
+  // Endless activities pay out after each five credited problems. Progress toward the next ticket
+  // is saved per activity, so a reload keeps "3 of 5".
+  const newSetId = activity => `${activity}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
   function practiceSet(activity) {
-    let solved = 0;
-    let setId = `${activity}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    const current = () => {
+      const saved = load().sets[activity];
+      return saved && typeof saved.id === 'string'
+        ? { id: saved.id, solved: Math.max(0, Math.min(4, Math.floor(Number(saved.solved)) || 0)) }
+        : { id: newSetId(activity), solved: 0 };
+    };
     return {
-      count: () => solved,
-      recordCorrect() {
-        solved++;
-        if (solved < 5) return false;
-        const earned = award(setId);
-        solved = 0;
-        setId = `${activity}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+      count: () => current().solved,
+      // Returns true when this problem completed a set and paid out a ticket.
+      recordCorrect(misses = 0) {
+        if (!earnsCredit(misses)) return false;
+        const set = current();
+        set.solved++;
+        if (set.solved < 5) {
+          const data = load();
+          data.sets[activity] = set;
+          save(data);
+          return false;
+        }
+        const earned = award(set.id);
+        const data = load();
+        data.sets[activity] = { id: newSetId(activity), solved: 0 };
+        save(data);
         return earned;
       }
     };
@@ -69,6 +89,13 @@ window.StarTickets = (() => {
     data.runs[game] = { ...info, free, started: Date.now() };
     save(data);
     return data.runs[game];
+  }
+  // Saves where an unfinished run is up to, so resuming it continues instead of starting over.
+  function saveProgress(game, progress) {
+    const data = load();
+    if (!data.runs[game]) return;
+    data.runs[game].progress = progress;
+    save(data);
   }
   function finishRun(game) {
     const data = load();
@@ -125,5 +152,5 @@ window.StarTickets = (() => {
   }
   const isShowingEmpty = () => !!emptyCard;
 
-  return { balance, award, practiceSet, activeRun, startRun, finishRun, wouldCharge, isFreePlay, setFreePlay, requestFreePlay, onChange, showEmpty, isShowingEmpty };
+  return { balance, award, earnsCredit, MAX_MISSES_FOR_CREDIT, practiceSet, activeRun, startRun, saveProgress, finishRun, wouldCharge, isFreePlay, setFreePlay, requestFreePlay, onChange, showEmpty, isShowingEmpty };
 })();

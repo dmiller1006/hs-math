@@ -588,6 +588,7 @@
         burst('sparkle', target.x, target.y - 36, calm ? 3 : 8, 90, { life: 700 });
         restartClass(plant.leaves, 'shake', 500);
         renderBasket(quest.picked.length - 1);
+        saveBerries();
         sfx.pick();
         hopCreature(1);
         if (quest.picked.length === quest.need) after(600, () => { sfx.chirp(); showBubble(4000); });
@@ -899,8 +900,15 @@
   $('pause').addEventListener('click', () => setPaused(true));
   $('resume').addEventListener('click', () => { audioContext(); setPaused(false); });
   // ---------- Levels and star tickets ----------
-  // Level N needs N + 2 berries. Starting a level spends one ticket; an unfinished level resumes free.
+  // Level N needs N + 2 berries. Starting a level spends one ticket; an unfinished level resumes free
+  // with the berries already in the basket.
   const tickets = window.StarTickets;
+  function saveBerries() { if (tickets && phase === 'play') tickets.saveProgress('creature-island', { picked: [...quest.picked] }); }
+  function restoreBerries(run) {
+    const picked = run && run.progress && Array.isArray(run.progress.picked) ? run.progress.picked : [];
+    for (const id of picked) if (quest.picked.length < quest.need) L.pick(quest, id);
+    renderBasket();
+  }
   const LEVEL_KEY = TEST ? 'creature-island-level-test' : 'creature-island-level';
   const loadLevel = () => { try { return Math.max(1, Math.floor(Number(localStorage.getItem(LEVEL_KEY))) || 1); } catch (_) { return 1; } };
   const saveLevel = n => { try { localStorage.setItem(LEVEL_KEY, String(n)); } catch (_) {} };
@@ -933,7 +941,9 @@
   function playLevel() {
     if (phase !== 'card' || paused) return;
     audioContext();
-    if (tickets && !tickets.startRun('creature-island', { level })) { tickets.showEmpty({ onFreePlay: renderCard }); return; }
+    const run = tickets ? tickets.startRun('creature-island', { level }) : null;
+    if (tickets && !run) { tickets.showEmpty({ onFreePlay: renderCard }); return; }
+    restoreBerries(run);
     phase = 'play';
     $('level-card').hidden = true;
     $('restart-level').hidden = false;
@@ -954,6 +964,7 @@
     if (phase !== 'play') return;
     setPaused(false);
     reset(level);
+    saveBerries();
     lastInput = clock;
     introBubble();
   });
